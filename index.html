@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Espace Client</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background: #f4f4f4;
+    }
+
+    header {
+      background: #2575fc;
+      color: #fff;
+      padding: 15px 20px;
+      text-align: center;
+      position: relative;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .logout-btn {
+      position: absolute;
+      right: 20px;
+      top: 15px;
+      background: #ff4c4c;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 15px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.3s ease;
+    }
+
+    .logout-btn:hover {
+      background: #cc0000;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 15px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      text-align: center;
+      transition: transform 0.2s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+    }
+
+    .card h2 {
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .card p {
+      color: #666;
+      margin-bottom: 15px;
+    }
+
+    .card a, .card button {
+      display: inline-block;
+      margin-top: 10px;
+      text-decoration: none;
+      color: #2575fc;
+      font-weight: bold;
+      border: 1px solid #2575fc;
+      border-radius: 8px;
+      padding: 10px 15px;
+      transition: background 0.3s, color 0.3s;
+      cursor: pointer;
+    }
+
+    .card a:hover, .card button:hover {
+      background: #2575fc;
+      color: #fff;
+    }
+
+    /* Style for the generated password display */
+    #generated-password {
+      font-size: 18px;
+      font-weight: bold;
+      color: #2575fc;
+      margin-top: 10px;
+    }
+
+    #antivirus-status {
+      font-weight: bold;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="login-page">
+    <header>
+      <h1>Connexion Client</h1>
+    </header>
+    <div class="container" style="max-width: 400px; margin: 40px auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); text-align: center;">
+      <h2>Connectez-vous à votre espace</h2>
+      <div class="input-group" style="margin-bottom: 15px;">
+        <label for="email" style="display: block; font-weight: bold; margin-bottom: 5px;">Email :</label>
+        <input type="email" id="email" placeholder="Entrez votre email" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px;">
+      </div>
+      <div class="input-group" style="margin-bottom: 15px;">
+        <label for="password" style="display: block; font-weight: bold; margin-bottom: 5px;">Mot de passe :</label>
+        <input type="password" id="password" placeholder="Entrez votre mot de passe" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px;">
+      </div>
+      <button class="btn" style="padding: 12px 20px; background: #2575fc; color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: background 0.3s ease;" onclick="validateLogin()">Se connecter</button>
+      <div id="error-message" style="color: red; margin-top: 15px; display: none;">Identifiants invalides</div>
+    </div>
+  </div>
+
+  <div id="client-page" style="display: none;">
+    <header>
+      <h1>Espace</h1>
+      <button class="logout-btn" onclick="logout()">Se déconnecter</button>
+    </header>
+    <div class="container">
+      <div class="card">
+        <h2>Antivirus</h2>
+        <p>Gérez et sécurisez vos appareils contre les menaces.</p>
+        <p id="antivirus-status" style="color: red;">Statut : Désactivé</p>
+        <button id="toggle-antivirus" onclick="toggleAntivirus()">Activer</button>
+      </div>
+      <div class="card">
+        <h2>Générateur de mots de passe</h2>
+        <p>Générez des mots de passe sécurisés en un clic.</p>
+        <a href="#" onclick="generatePassword()">Générer un mot de passe</a>
+        <div id="generated-password"></div>
+      </div>
+      <div class="card">
+        <h2>Mes abonnements</h2>
+        <p>Consultez vos abonnements actifs et options.</p>
+        <a href="#">Accéder</a>
+      </div>
+      <div class="card">
+        <h2>Assistance</h2>
+        <p>Contactez notre support technique ou consultez la FAQ.</p>
+        <a href="#">Accéder</a>
+      </div>
+      <div class="card">
+        <h2>Historique</h2>
+        <p>Consultez l'historique de vos actions récentes.</p>
+        <a href="#">Accéder</a>
+      </div>
+      <div class="card">
+        <h2>Paramètres</h2>
+        <p>Personnalisez votre compte et vos préférences.</p>
+        <a href="#">Accéder</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const users = [
+      { email: "client1@example.com", password: "password123" },
+      { email: "client2@example.com", password: "secure456" },
+      { email: "admin@example.com", password: "admin789" }
+    ];
+
+    function validateLogin() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const errorMessage = document.getElementById("error-message");
+
+      const user = users.find(user => user.email === email && user.password === password);
+
+      if (user) {
+        document.getElementById("login-page").style.display = "none";
+        document.getElementById("client-page").style.display = "block";
+      } else {
+        errorMessage.style.display = "block";
+      }
+    }
+
+    function logout() {
+      document.getElementById("login-page").style.display = "block";
+      document.getElementById("client-page").style.display = "none";
+      document.getElementById("email").value = "";
+      document.getElementById("password").value = "";
+    }
+
+    function generatePassword() {
+      const length = 12;
+      const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+";
+      let password = "";
+      for (let i = 0; i < length; i++) {
+        password += charset.charAt(Math.floor(Math.random() * charset.length));
+      }
+      document.getElementById("generated-password").textContent = "Mot de passe généré: " + password;
+    }
+
+    function toggleAntivirus() {
+      const statusElement = document.getElementById("antivirus-status");
+      const toggleButton = document.getElementById("toggle-antivirus");
+
+      if (statusElement.textContent.includes("Désactivé")) {
+        statusElement.textContent = "Statut : Activé";
+        statusElement.style.color = "green";
+        toggleButton.textContent = "Désactiver";
+      } else {
+        statusElement.textContent = "Statut : Désactivé";
+        statusElement.style.color = "red";
+        toggleButton.textContent = "Activer";
+      }
+    }
+  </script>
+</body>
+</html>
